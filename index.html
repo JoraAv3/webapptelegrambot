@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mining</title>
+</head>
+<body>
+    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="Dust_of_the_moon_bot" data-size="medium" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
+    <script type="text/javascript">
+    function onTelegramAuth(user) {
+        alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+    }
+    function onTelegramAuth(user) {
+    // Создаем объект данных пользователя для отправки на сервер
+    const userData = {
+        telegram_id: user.id,
+        username: user.username,
+        first_name: user.first_name,
+        last_name: user.last_name
+    };
+    
+    // Отправляем данные пользователя на сервер
+    fetch('/register_telegram_user/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken  // Добавьте CSRF токен, если вы используете Django
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Пользователь успешно зарегистрирован');
+            // Выполните действия после успешной регистрации, например, перенаправление или обновление UI
+        } else {
+            console.error('Ошибка регистрации:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Произошла ошибка:', error);
+    });
+}
+
+</script>
+</body>
+</html>
